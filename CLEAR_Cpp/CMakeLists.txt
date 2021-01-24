@@ -18,20 +18,6 @@ include_directories(${PROJECT_SOURCE_DIR}/include
   ${EIGEN3_INCLUDE_DIR})
 message(${PROJECT_SOURCE_DIR})
 
-add_executable(test_hungarian
- src/tests/testHungarian.cpp
- src/Hungarian.cpp
-)
-
-add_executable(test_mygraph
- src/tests/testMyGraph.cpp
- src/MyGraph.cpp
-)
-
-add_executable(test_block_svd
- src/tests/testBlockSVD.cpp
- src/MyGraph.cpp
-)
 
 file(GLOB CLEAR_HPP_FILESYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/include/clear/*.hpp" )
 file(GLOB CLEAR_CPP_FILESYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp" )
