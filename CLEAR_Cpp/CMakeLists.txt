@@ -3,6 +3,7 @@ project(clear)
 
 set(CMAKE_CXX_STANDARD 11)
 
+
 # Find Eigen3
 message(STATUS "CMAKE_SOURCE_DIR: ${CMAKE_SOURCE_DIR}")
 find_package(Eigen3 REQUIRED)
@@ -15,6 +16,7 @@ endif()
 
 include_directories(${PROJECT_SOURCE_DIR}/include
   ${EIGEN3_INCLUDE_DIR})
+message(${PROJECT_SOURCE_DIR})
 
 add_executable(test_hungarian
  src/tests/testHungarian.cpp
@@ -31,16 +33,22 @@ add_executable(test_block_svd
  src/MyGraph.cpp
 )
 
-add_library(clear SHARED
-        src/MultiwayMatcher.cpp
-        src/Hungarian.cpp
-        src/MyGraph.cpp)
+file(GLOB CLEAR_HPP_FILESYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/include/clear/*.hpp" )
+file(GLOB CLEAR_CPP_FILESYSTEM "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp" )
 
-INSTALL(TARGETS clear
-        ARCHIVE DESTINATION lib
+add_library(openMVG_clear SHARED  
+	"${CMAKE_CURRENT_SOURCE_DIR}/src/MultiwayMatcher.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/src/MyGraph.cpp"
+	"${CMAKE_CURRENT_SOURCE_DIR}/src/Hungarian.cpp"
+	${CLEAR_HPP_FILESYSTEM})
+
+INSTALL(TARGETS openMVG_clear
+	EXPORT clear-targets
+	PUBLIC_HEADER DESTINATION include
+	ARCHIVE DESTINATION lib
         LIBRARY DESTINATION lib
         )
-
+INSTALL(EXPORT clear-targets FILE clear-config.cmake DESTINATION lib/cmake/clear)
 INSTALL(DIRECTORY include/clear
         DESTINATION include
         )
@@ -49,12 +57,5 @@ INSTALL(DIRECTORY include/clear
 add_executable(clear_tests
         src/tests/clearUnitTests.cpp)
 target_include_directories(clear_tests PRIVATE external)
-target_link_libraries(clear_tests clear)
-
-
-
-
-
-
-
-
+target_link_libraries(clear_tests openMVG_clear)
+set_property(TARGET openMVG_clear PROPERTY FOLDER OpenMVG/3rdParty/clear)
