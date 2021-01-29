@@ -1,6 +1,6 @@
 set -e
 mkdir -p build
-pushd build
+cd build
 cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo
 make -j$(nproc)
 ./clear_tests

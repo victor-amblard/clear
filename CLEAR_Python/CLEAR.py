@@ -82,18 +82,31 @@ def CLEAR(TT, numSmp, numAgt, numObj=None):
     
     return XX
 
-f = open("in.txt", "r")
-t = [int(x) for x in f.read().strip().split(' ')]
-f.close()
-Pin = np.array(t).reshape((65,65)).T
-numSmp = [6,8,10,8,6,5,5,5,8,4]
-numAgt = len(numSmp)
+def read_data_from_file(filename):
+    
+    with open(filename, 'r') as f:
+        allLines = list(map(str.strip, f.readlines()))
+        n = int(allLines[0])
+        numSmp = [int(x) for x in allLines[1].split()]
 
+        Pin = np.array([int(x) for x in allLines[2].split()]).reshape((n,n)).T
+    
+    return n, numSmp, Pin.T
+          
+n, numSmp, Pin = read_data_from_file("in2.txt")
+numAgt = len(numSmp)
+print(numAgt)
+print(sum(numSmp))
 Pout = CLEAR(Pin,numSmp,numAgt)
 
-f = open("out.txt", "r")
-t = [int(x) for x in f.read().strip().split(' ')]
-f.close()
-Exp = np.array(t).reshape((65,65)).T
+with open("output.txt", "w") as f:
+    for x in Pout:
+        f.write(" ".join(list(map(str,list(map(int,x))))))
+        f.write("\n")
+    
+#f = open("out.txt", "r")
+#t = [int(x) for x in f.read().strip().split(' ')]
+#f.close()
+#Exp = np.array(t).reshape((74,74)).T
 
-print(np.sum(Pout != Exp))
+# print(np.sum(Pout != Exp))
